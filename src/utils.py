@@ -6,6 +6,34 @@ from pandas import DataFrame
 from pandas.api.types import is_numeric_dtype, is_string_dtype
 
 
+# Colors for each of the League of Legends Ranks
+RANK_COLORS = {
+    "Iron": "#51484a",
+    "Bronze": "#a35869",
+    "Silver": "#989ea3",
+    "Gold": "#f1ac46",
+    "Platinum": "#15bdd8",
+    "Emerald": "#33c4b3",
+    "Diamond": "#3543cc",
+    "Master": "#9d1357",
+    "Grandmaster": "#c34017",
+    "Challenger": "#f0af31",
+}
+
+RANK_ORDER = [
+    "Iron",
+    "Bronze",
+    "Silver",
+    "Gold",
+    "Platinum",
+    "Emerald",
+    "Diamond",
+    "Master",
+    "Grandmaster",
+    "Challenger",
+]
+
+
 def get_unique_champs_from_df(df: DataFrame, columns: list[str]) -> list[int]:
     """Given a DataFrame containing champions and a list of relevant columns,
     extract the unique champions in the dataframe.
@@ -20,7 +48,6 @@ def get_unique_champs_from_df(df: DataFrame, columns: list[str]) -> list[int]:
 
     cols = df[columns]
     flattened = cols.to_numpy().flatten().tolist()
-
     return list(set(flattened))
 
 
@@ -35,6 +62,7 @@ def create_id_champ_map(
     Returns:
         dict[int, str]: A dictionary containing id to champion mappings.
     """
+
     csv = pd.read_csv(src)
     mapping = {}
 
@@ -60,7 +88,6 @@ def create_id_champ_map(
     for idx, row in csv.iterrows():
         id = row.iloc[0]
         champ = row.iloc[1]
-
         if reverse_map:
             mapping[champ] = id
         else:
@@ -90,14 +117,15 @@ def get_win_counts(df: DataFrame, columns: list[str]) -> tuple[int, int]:
     wins = df[columns]
 
     if len(columns) != 2:
+
         raise ValueError(
             "Invalid Number of Columns: There should be exactly two columns.\n"
             + f"Columns: {columns}"
         )
 
     wins = df[columns]
-    red_team_value_counts = wins[columns[0]].value_counts()
 
+    red_team_value_counts = wins[columns[0]].value_counts()
     red_team_wins = red_team_value_counts[1]
     blue_team_wins = red_team_value_counts[0]
 
