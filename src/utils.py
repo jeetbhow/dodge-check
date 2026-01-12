@@ -5,8 +5,9 @@ from pprint import pprint
 from pandas import DataFrame
 from pandas.api.types import is_numeric_dtype, is_string_dtype
 
+from sklearn.preprocessing import MultiLabelBinarizer
 
-# Colors for each of the League of Legends Ranks
+
 RANK_COLORS = {
     "Iron": "#51484a",
     "Bronze": "#a35869",
@@ -130,3 +131,50 @@ def get_win_counts(df: DataFrame, columns: list[str]) -> tuple[int, int]:
     blue_team_wins = red_team_value_counts[0]
 
     return (red_team_wins, blue_team_wins)
+
+
+def create_one_hot_encoding(
+    df: DataFrame,
+    blue_champ_cols: list[str],
+    red_champ_cols: list[str],
+    champs: list[int],
+    names=False,
+) -> DataFrame:
+    """Given a DataFrame containing rows of matches and a list of champions, create a
+    one-hot encoding for the champions in the dataframe.
+
+    Args:
+        df (DataFrame): A DataFrame containing rows of matches.
+        blue_champ_cols (list[str]): The names of the columns containing the champions on the blue team.
+        red_champ_cols (list[str]): The names of the columns containing the champions on the red team.
+        champs (list[int]): A list of ids corresponding to unique champions in the dataset.
+
+    Returns:
+        DataFrame: A new DataFrame containing a one-hot encoding for the champions in all matches..
+    """
+
+    blue_champ_cols_values = df[blue_champ_cols].values.tolist()
+    red_champ_cols_values = df[red_champ_cols].values.tolist()
+    other_cols = df.drop(columns=red_champ_cols + blue_champ_cols)
+
+    binarizer = MultiLabelBinarizer(classes=champs)
+
+    ohe_blue_champs_cols = pd.DataFrame(
+        binarizer.fit_transform(blue_champ_cols_values), columns=champs, index=df.index
+    )
+
+    ohe_red_champs_cols = pd.DataFrame(
+        binarizer.fit_transform(red_champ_cols_values), columns=champs, index=df.index
+    )
+
+    # Create difference encoding: positive if champion is on blue team, negative if on red team
+    champ_diff = ohe_blue_champs_cols - ohe_red_champs_cols
+
+    stacked = pd.concat(
+        [champ_diff, other_cols], axis=1, join="inner"
+    )
+
+    if names:
+        stacked = stacked.rename(columns=create_id_champ_map())
+
+    return stacked
