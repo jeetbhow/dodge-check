@@ -1,0 +1,24 @@
+{
+  "model_type": "XGBoost",
+  "test_auc": 0.5993455146065189,
+  "validation_auc": 0.6003761111066455,
+  "hyperparameters": {
+    "n_estimators": 200,
+    "learning_rate": 0.3,
+    "max_depth": 3,
+    "subsample": 1.0
+  },
+  "features": [
+    "B1Champ",
+    "B2Champ",
+    "B3Champ",
+    "B4Champ",
+    "B5Champ",
+    "R1Champ",
+    "R2Champ",
+    "R3Champ",
+    "R4Champ",
+    "R5Champ"
+  ],
+  "encoding": "integer"
+}
