@@ -12,6 +12,17 @@ Dodge-Check helps you understand your chances of winning a League of Legends mat
 
 When you're in champion select for a ranked game, it's helpful to know if your team has a strong draft or if you're at a disadvantage. This tool analyzes the team compositions and gives you that insight - something that's actually useful for regular players, not just professionals or analysts.
 
+# Checklist
+
+Here's a checklist of things I have to do in order for the first version of the app to be considered "done".
+
+- [x] Exploratory Data Analysis
+- [x] Try classical machine learning techniques
+- [ ] Try deep learning approaches
+- [ ] Build an API to access the model
+- [ ] Build a frontend
+- [ ] Put it all together
+- [ ] Deploy
 
 # Technical Details
 
